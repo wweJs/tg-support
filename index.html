@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            color: #28a745;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Support Form</h2>
+    <textarea id="support-text" placeholder="Support text"></textarea>
+    <input type="text" id="phone" placeholder="Your phone number">
+    <input type="email" id="email" placeholder="Your E-MAIL">
+    <button onclick="sendReport()">Send</button>
+    <div class="message" id="message">Your report sent!</div>
+</div>
+
+<script>
+    function sendReport() {
+        var supportText = document.getElementById('support-text').value;
+        var phone = document.getElementById('phone').value;
+        var email = document.getElementById('email').value;
+
+        if (supportText && phone && email) {
+            var token = '7438378358:AAEwmLQU3a2fdEQFIDeDr6Vl7GPyy5KiHl0';
+            var chat_id = '979568675';
+            
+            var message = `
+🛜 <b>Новая жалоба.</b>
+
+🗞️ <b>Текст</b>
+ └ ${supportText}
+ 
+📞 <b>Телефон</b>
+ └ ${phone}
+
+✉️ <b>Почта</b>
+ └ ${email}
+`;
+
+            var url = `https://api.telegram.org/bot${token}/sendMessage`;
+            var payload = {
+                chat_id: chat_id,
+                text: message,
+                parse_mode: 'HTML'
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    document.getElementById('message').style.display = 'block';
+                    document.getElementById('support-text').value = '';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('email').value = '';
+                } else {
+                    alert('Ошибка при отправке отчета.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при отправке отчета.');
+            });
+        } else {
+            alert('Пожалуйста, заполните все поля.');
+        }
+    }
+</script>
+
+</body>
+</html>
